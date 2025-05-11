@@ -153,57 +153,69 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    function run() {
-  var id = document.getElementById("songid").value;
-  var output = document.getElementById("run");
-  output.innerHTML = '';
-
-  var text = document.createElement("p");
+   function run() {
+  const id = document.getElementById("songid").value;
+  const output = document.getElementById("run");
+  output.innerHTML = "";
 
   if (id === "") {
-    text.innerHTML = "No Song ID";
-    output.appendChild(text);
+    outMSG("No Song ID");
     return;
   }
 
-  text.innerHTML = "Wait...";
-  output.appendChild(text);
+  outMSG("Wait...");
 
-  getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Faudio%2Flisten%2F" + id)
-    .then(function(body) {
-      var data = JSON.parse(body).contents;
-      var code = JSON.parse(body).status.http_code;
-
-      if (code !== 200) {
-        outMSG(code === 404 ? "Not Found" : "Something went wrong. ERROR CODE " + code);
+  getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Faudio%2Flisten%2F" + id).then(function(body) {
+    const data = JSON.parse(body).contents;
+    const code = JSON.parse(body).status.http_code;
+    if (code !== 200) {
+      if (code === 404) {
+        outMSG("Not Found");
         return;
       }
+      outMSG("Something went wrong. ERROR CODE " + code); 
+      return;
+    }
 
-      var url = data.substring(data.indexOf("<![CDATA[") + 9);
-      url = url.substring(url.indexOf("embedController([") + 17);
-      url = url.substring(0, url.indexOf("\",\""));
-      url = url.substring(0, url.indexOf("?"));
-      url = url.substring(url.indexOf("url") + 3);
-      url = url.substring(url.indexOf(":\"") + 2);
-      url = url.replace(/\\\//g, "/");
+    let url = data.substring(data.indexOf("<![CDATA[") + 9);
+    url = url.substring(url.indexOf("embedController([") + 17);
+    url = url.substring(0, url.indexOf("\",\""));
+    url = url.substring(0, url.indexOf("?"));
+    url = url.substring(url.indexOf("url") + 3);
+    url = url.substring(url.indexOf(":\"") + 2);
+    url = url.replace(/\\\//g, "/");
 
-      var title = data.substring(data.indexOf("<title>") + 7);
-      title = title.substring(0, title.lastIndexOf("</title>"));
+    outMSG("Downloading...");
 
-      var msg = document.createElement("p");
-      msg.innerHTML = "Done!";
-      output.appendChild(msg);
+    const win = window.open("", "_blank");
 
-      var audio = document.createElement("audio");
-      audio.controls = true;
-      audio.src = url;
-      audio.style.marginTop = "20px";
-      output.appendChild(audio);
+    if (win) {
+      win.document.write(`
+        <html>
+        <body style="background: #111; color: white; font-family: sans-serif; text-align: center; padding-top: 50px;">
+          <p>Starting download...</p>
+          <a id="dl" href="${url}" download style="display:none;"></a>
+          <script>
+            const link = document.getElementById('dl');
+            link.click();
+            setTimeout(() => window.close(), 2000);
+          <\/script>
+        </body>
+        </html>
+      `);
+    } else {
+      outMSG("Pop-up blocked. Please allow pop-ups for this site.");
+    }
 
-    }, function(status) {
-      outMSG("Something went wrong. ERROR CODE " + status);
-    });
+  }, function(status) {
+    if (status === 404) {
+      outMSG("Not Found");
+      return;
+    }
+    outMSG("Something went wrong. ERROR CODE " + status);
+  });
 }
+
 
     var getPage = function(url) {
       return new Promise(function(resolve, reject) {
