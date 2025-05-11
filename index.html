@@ -193,7 +193,7 @@
       win.document.write(`
         <html>
         <body style="background: #111; color: white; font-family: sans-serif; text-align: center; padding-top: 50px;">
-          <p>Starting download...</p>
+          <p>Redirecting...</p>
           <a id="dl" href="${url}" download style="display:none;"></a>
           <script>
             const link = document.getElementById('dl');
@@ -204,7 +204,7 @@
         </html>
       `);
     } else {
-      outMSG("Pop-up blocked. Please allow pop-ups for this site.");
+      outMSG("Redirect blocked, please allow popups on this site.");
     }
 
   }, function(status) {
