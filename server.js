@@ -19,17 +19,15 @@ app.get('/rip', async (req, res) => {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
-    // Buscar el script que contiene la URL
     const scripts = $('script').toArray();
     let mp3Url = null;
 
     for (const script of scripts) {
       const content = $(script).html();
       if (content && content.includes('ng_filename')) {
-        const match = content.match(/https:\\\/\\\/audio\.ngfiles\.com\\\/[^"]+\.mp3/);
+        const match = content.match(/https:\/\/audio\.ngfiles\.com\/\d+\/\d+_[\w-]+\.mp3/);
         if (match) {
-          // Limpiar la URL de los caracteres escapados
-          mp3Url = match[0].replace(/\\\//g, '/');
+          mp3Url = match[0];
           break;
         }
       }
