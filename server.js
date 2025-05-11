@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -6,7 +7,12 @@ const cheerio = require('cheerio');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://deep-v2.github.io',  
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions)); 
 
 app.get('/rip', async (req, res) => {
   const { url } = req.query;
@@ -32,7 +38,6 @@ app.get('/rip', async (req, res) => {
       if (content && content.includes('audioFile')) {
         const match = content.match(/https:\\\/\\\/audio\.ngfiles\.com\\\/\d+\\\/\d+_[\w-]+\.mp3/g);
         if (match && match[0]) {
-          // Clean backslashes
           mp3Url = match[0].replace(/\\\//g, '/');
         }
       }
