@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NewGrounds Ripper</title>
-  <link rel="icon" href="logo.png" type="image/png"> <!-- Logo para la pestaña -->
+  <link rel="icon" href="logo.png" type="image/png">
   <style>
     body {
       background-color: #111;
-      background-image: url('bg.png'); /* Fondo con imagen */
+      background-image: url('bg.png');
       background-size: cover;
       background-position: center;
       color: white;
@@ -19,10 +19,9 @@
       transition: background-color 0.3s ease;
     }
 
-    /* Estilo para el header (menú superior) */
     header {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       padding: 20px;
       background-color: rgba(0, 0, 0, 0.7);
@@ -35,7 +34,8 @@
 
     header img {
       width: 50px;
-      height: auto;
+      height: 50px;
+      border-radius: 10px;
     }
 
     header h1 {
@@ -44,7 +44,6 @@
       margin-left: 10px;
     }
 
-    /* Botón de Support */
     #supportBtn {
       background-color: #FF4500;
       color: #111;
@@ -53,31 +52,22 @@
       border-radius: 8px;
       border: none;
       cursor: pointer;
+      margin-left: 20px;
     }
 
     #supportBtn:hover {
-      background-color: #FF6A00;
+      background-color: #E03C00;
     }
 
     #app {
-      background-color: rgba(0, 0, 0, 0.7);
-      border-radius: 10px;
-      padding: 30px;
-      max-width: 500px;
-      margin: 120px auto 50px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
-    }
-
-    #logo {
-      width: 200px;
-      margin-bottom: 20px;
+      margin-top: 120px;
     }
 
     h1 {
       color: #FF4500;
       font-size: 2.5rem;
       text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-      transition: color 0.3s ease;
+      margin-top: 50px;
     }
 
     input, button {
@@ -133,44 +123,36 @@
     }
 
     footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
       text-align: center;
-      font-size: 1rem;
-      margin-top: 50px;
       color: #fff;
     }
-
-    footer p {
-      margin: 0;
-    }
-
   </style>
 </head>
 <body>
 
   <header>
-    <div style="display: flex; align-items: center;">
-      <img src="logo.png" alt="NG Ripper Logo">
-      <h1>NG Ripper</h1>
-    </div>
-    <button id="supportBtn" onclick="window.location.href='support.html'">Support</button>
+    <a href="index.html"><img src="logo.png" alt="Logo"></a>
+    <h1>NG Ripper</h1>
+    <a id="supportBtn" href="support.html">Support</a>
   </header>
 
   <div id="app">
     <h1 class="fadeIn">NewGrounds Ripper</h1>
     <p class="fadeIn">Enter the song ID.</p>
-    
     <input type="text" id="songid" placeholder="Enter Song ID" class="fadeIn" />
     <button onclick="run()" class="fadeIn">Download</button>
-  
     <div id="run"></div>
   </div>
 
   <footer>
-    <p>&#169; NGRipper <span id="year"></span></p>
+    <p>&copy; NGRipper <span id="year"></span></p>
   </footer>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear(); // Pone el año actual en el footer
+    document.getElementById("year").innerText = new Date().getFullYear();
 
     function run() {
       var id = document.getElementById("songid").value;
