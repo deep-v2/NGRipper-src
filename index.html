@@ -1,78 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NewGrounds Ripper</title>
   <style>
     body {
-      background-color: #111;
-      color: #f4f4f4;
-      font-family: 'Arial', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      text-align: center;
+      padding: 50px;
     }
-
-    h1 {
-      color: #ffcc00;
-      text-shadow: 1px 1px 3px #000;
-    }
-
-    input {
-      width: 300px;
+    input, button {
       padding: 10px;
-      margin: 20px 0;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
+      margin: 10px;
+      font-size: 16px;
     }
-
     button {
-      padding: 10px 20px;
-      background-color: #ff9900;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
       border: none;
       border-radius: 5px;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
     }
-
     button:hover {
-      background-color: #ffcc00;
+      background-color: #45a049;
     }
-
-    .error {
+    #errorMsg {
       color: red;
-      margin-top: 10px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
   <h1>NewGrounds Ripper</h1>
-  <input type="text" id="ng-url" placeholder="Paste Newgrounds song URL..." />
-  <button onclick="downloadMP3()">Download MP3</button>
-  <div class="error" id="error-msg"></div>
+  <p>Enter the URL of a Newgrounds audio page to download the MP3.</p>
+
+  <input type="text" id="audioUrl" placeholder="Enter Newgrounds Audio URL" size="50">
+  <button id="downloadBtn">Download MP3</button>
+
+  <p id="errorMsg"></p>
 
   <script>
-    async function downloadMP3() {
-      const input = document.getElementById('ng-url');
-      const errorMsg = document.getElementById('error-msg');
-      const url = input.value.trim();
-      errorMsg.textContent = '';
+    const downloadBtn = document.getElementById('downloadBtn');
+    const audioUrlInput = document.getElementById('audioUrl');
+    const errorMsg = document.getElementById('errorMsg');
 
-      if (!url.includes('newgrounds.com/audio/listen/')) {
-        errorMsg.textContent = 'Invalid Newgrounds audio URL.';
+    downloadBtn.addEventListener('click', async () => {
+      const url = audioUrlInput.value.trim();
+
+      if (!url) {
+        errorMsg.textContent = 'Please enter a valid URL.';
         return;
       }
 
+      // Request to backend to get the MP3 URL
       try {
-        const response = await fetch(`https://<TU_BACKEND>.up.railway.app/rip?url=${encodeURIComponent(url)}`);
+        const response = await fetch(`https://ngripper-src-production.up.railway.app/rip?url=${encodeURIComponent(url)}`);
         const data = await response.json();
 
         if (!data.mp3) {
@@ -80,19 +65,21 @@
           return;
         }
 
+        // Create an invisible link to trigger the download
         const link = document.createElement('a');
         link.href = data.mp3;
-        link.download = ''; // para que fuerce la descarga
+        link.download = '';  // The file will be downloaded without specifying the filename
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
+        errorMsg.textContent = '';  // Clear any previous errors
       } catch (error) {
         console.error(error);
         errorMsg.textContent = 'Error downloading file.';
       }
-    }
+    });
   </script>
 
 </body>
