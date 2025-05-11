@@ -4,16 +4,99 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NewGrounds Ripper</title>
+  <style>
+    /* General Styles */
+    body {
+      background-color: #111; /* Fondo negro */
+      color: white;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease;
+    }
+
+    h1 {
+      color: #FF4500; /* Naranja */
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+      margin-top: 50px;
+      transition: color 0.3s ease;
+    }
+
+    input, button {
+      font-size: 1.2rem;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: 2px solid #FF4500;
+      background-color: #222; /* Fondo oscuro para input */
+      color: #FF4500;
+      transition: transform 0.2s ease-in-out, background-color 0.3s ease;
+    }
+
+    input:focus, button:hover {
+      background-color: #FF4500;
+      color: #111;
+      transform: scale(1.1);
+    }
+
+    /* Animaciones suaves */
+    .fadeIn {
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .blur-background {
+      filter: blur(10px);
+      transition: filter 0.5s ease;
+    }
+
+    #run {
+      margin-top: 30px;
+    }
+
+    /* Link de descarga */
+    a {
+      font-size: 1.2rem;
+      color: #FF4500;
+      text-decoration: none;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    a:hover {
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    /* Mensajes de estado */
+    p {
+      font-size: 1.2rem;
+      color: #fff;
+      margin: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h1>NewGrounds Ripper</h1>
-  <p>Enter the song ID (from Newgrounds) and click "Download" to get the MP3 file.</p>
+
+  <div id="app" class="blur-background">
+    <h1 class="fadeIn">NewGrounds Ripper</h1>
+    <p class="fadeIn">Enter the song ID.</p>
+    
+    <!-- Input field to get song ID -->
+    <input type="text" id="songid" placeholder="Enter Song ID" class="fadeIn" />
+    <button onclick="run()" class="fadeIn">Download</button>
   
-  <!-- Input field to get song ID -->
-  <input type="text" id="songid" placeholder="Enter Song ID" />
-  <button onclick="run()">Download</button>
-  
-  <div id="run"></div>
+    <div id="run"></div>
+  </div>
 
   <script>
     function run() {
@@ -23,12 +106,12 @@
       var text = document.createElement("p");
 
       if(id == "") {
-        text.innerHTML = "Song ID is empty!";
+        text.innerHTML = "No Song ID";
         output.appendChild(text);
         return;
       }
 
-      text.innerHTML = "Starting download with ID "+id;
+      text.innerHTML = "Please wait...";
       output.appendChild(text);
 
       getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Faudio%2Flisten%2F" + id).then(function(body) {
@@ -58,20 +141,19 @@
         msg.innerHTML = "Done!";
         output.appendChild(msg);
 
-        // Initiate download automatically
         var out = document.createElement("a");
         out.href = url;
-        out.download = title;  // This will set the file name when downloaded
-        out.style.display = "none";  // Hide the download link
+        out.download = title;  
+        out.style.display = "none";  
         document.body.appendChild(out);
-        out.click();  // Trigger the download
-        document.body.removeChild(out);  // Remove the link after clicking
+        out.click();  
+        document.body.removeChild(out); 
       }, function(status) {
         if(status == 404) {
-          outMSG("The song could not be found! Please check the song id and try again! (error 404)");
+          outMSG("Not Found");
           return;
         }
-        outMSG("Something went wrong! Please check your internet connection and try again! Error Code: "+status);
+        outMSG("Something went wrong. ERROR CODE "+status);
       });
     }
 
@@ -99,5 +181,6 @@
       output.appendChild(msg);
     }
   </script>
+
 </body>
 </html>
