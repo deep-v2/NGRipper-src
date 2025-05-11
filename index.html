@@ -101,7 +101,7 @@
         return;
       }
 
-      text.innerHTML = "Starting download with ID " + id;
+      text.innerHTML = "Wait...";
       output.appendChild(text);
 
       getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Faudio%2Flisten%2F" + id).then(function(body) {
