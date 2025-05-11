@@ -96,7 +96,7 @@
       var text = document.createElement("p");
 
       if(id == "") {
-        text.innerHTML = "Song ID is empty!";
+        text.innerHTML = "No Song ID";
         output.appendChild(text);
         return;
       }
@@ -112,7 +112,7 @@
             outMSG("Not Found");
             return;
           }
-          outMSG("Something went wrong. ERROR CODE " + code);
+          outMSG("Something went wrong. ERROR CODE " + code); 
           return;
         }
 
