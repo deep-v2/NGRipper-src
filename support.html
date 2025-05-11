@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Support NGRipper</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 30px 20px 10px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #FF4500;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 50px;
+    }
+
+    .links a {
+      display: inline-block;
+      width: 200px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background-color: #222;
+      color: #FF4500;
+      text-decoration: none;
+      font-size: 1.1rem;
+      border: 2px solid #FF4500;
+      transition: all 0.3s ease;
+    }
+
+    .links a:hover {
+      background-color: #FF4500;
+      color: #111;
+      transform: scale(1.05);
+    }
+
+    footer {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Support NGRipper</h1>
+    <p>Follow me or support me on these platforms:</p>
+  </header>
+
+  <div class="links">
+    <a href="https://www.tiktok.com/@imflakez" target="_blank">TikTok</a>
+    <a href="https://twitter.com/TweetAgusCC" target="_blank">X (Twitter)</a>
+    <a href="https://www.youtube.com/@imflakez" target="_blank">YouTube</a>
+    <a href="https://kick.com/imflakez" target="_blank">Kick</a>
+  </div>
+
+  <footer>
+    &copy; NGRipper <span id="year"></span>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
