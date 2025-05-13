@@ -171,29 +171,17 @@
 
     outMSG("Fetching video...");
 
-    // Usamos el servicio de AllOrigins para obtener la página de Newgrounds
-    getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Fportal%2Fview%2F" + videoId).then(function(body) {
-      const data = JSON.parse(body).contents;
-      const code = JSON.parse(body).status.http_code;
-
-      if (code !== 200) {
-        if (code === 404) {
-          outMSG("Video Not Found");
-          return;
-        }
-        outMSG("Something went wrong. ERROR CODE " + code); 
-        return;
-      }
-
-      // Buscar la URL del video dentro de la etiqueta <source type="video/mp4">
-      let videoUrl = data.match(/<video[^>]*><source[^>]*type="video\/mp4"[^>]*src="(https:\/\/uploads\.ungrounded\.net\/alternate\/[^"]+)"/);
+    // Obtener la página de video desde Newgrounds
+    getPage("https://www.newgrounds.com/portal/view/" + videoId).then(function(body) {
+      // Buscar la URL del video MP4
+      let videoUrl = body.match(/<video[^>]*><source[^>]*type="video\/mp4"[^>]*src="(https:\/\/uploads\.ungrounded\.net\/[^"]+)"/);
 
       if (videoUrl && videoUrl[1]) {
         outMSG("Done! Redirecting to video...");
-        // Redirigir al usuario a la URL del video
+        // Redirigir al usuario al enlace del video
         window.location.href = videoUrl[1];
       } else {
-        outMSG("Video URL not found.");
+        outMSG("Video Not Found");
       }
 
     }, function(status) {
@@ -228,4 +216,3 @@
 
 </body>
 </html>
-
