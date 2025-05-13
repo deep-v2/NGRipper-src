@@ -185,13 +185,13 @@
         return;
       }
 
-      // Buscar la URL del video en el contenido
-      let videoUrl = data.match(/<source type="video\/mp4" src="(https:\/\/[^\"]+)">/);
+      // Buscar la URL del video dentro de la etiqueta <source type="video/mp4">
+      let videoUrl = data.match(/<video[^>]*><source[^>]*type="video\/mp4"[^>]*src="(https:\/\/uploads\.ungrounded\.net\/alternate\/[^"]+)"/);
 
       if (videoUrl && videoUrl[1]) {
-        outMSG("Done! Video URL: " + videoUrl[1]);
-        // Aquí puedes redirigir o mostrar un enlace para descargar el video
-        output.innerHTML = `<a href="${videoUrl[1]}" target="_blank">Click to download the video</a>`;
+        outMSG("Done! Redirecting to video...");
+        // Redirigir al usuario a la URL del video
+        window.location.href = videoUrl[1];
       } else {
         outMSG("Video URL not found.");
       }
