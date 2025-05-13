@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="google-site-verification" content="YKdmuuwbzgjOP3iJVuUpVYccjKFx6HfwYvLv5GmRtSE" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NewGrounds Video Downloader</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: url('bg.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 10px #000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      color: #FF4500;
+      font-weight: bold;
+    }
+
+    .support-btn {
+      background-color: #FF4500;
+      border: none;
+      color: #111;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .support-btn:hover {
+      background-color: #ff652f;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .container h2 {
+      font-size: 1.8rem;
+      color: #FF4500;
+      margin-bottom: 5px;
+    }
+
+    .container h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #ccc;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 1rem;
+      margin: 10px 5px;
+      border-radius: 8px;
+      border: 2px solid #FF4500;
+      background-color: #222;
+      color: #FF4500;
+      transition: 0.3s ease;
+    }
+
+    input:focus, button:hover {
+      background-color: #FF4500;
+      color: #111;
+      transform: scale(1.05);
+    }
+
+    #run {
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      background-color: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 -2px 10px #000;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="logo.png" alt="Logo" class="logo">
+    <div class="title">NGRipper</div>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <button class="support-btn" onclick="location.href='index.html'">Audio</button>
+    <button class="support-btn" onclick="location.href='video.html'">Video</button>
+    <button class="support-btn" onclick="location.href='swf.html'">SWF</button>
+    <button class="support-btn" onclick="location.href='support.html'">Support Me</button>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h2>NewGrounds Video Downloader</h2>
+    <h3>Enter NewGrounds Video URL</h3>
+    <input type="text" id="videoUrl" placeholder="Enter Video URL (e.g., https://www.newgrounds.com/portal/view/*)">
+    <button onclick="fetchVideo()">Download Video</button>
+    <div id="run"></div>
+  </div>
+</main>
+
+<footer>
+  &copy; NGRipper <span id="year"></span>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function fetchVideo() {
+    const videoUrl = document.getElementById("videoUrl").value;
+    const output = document.getElementById("run");
+    output.innerHTML = "";
+
+    if (videoUrl === "") {
+      outMSG("Please enter a video URL.");
+      return;
+    }
+
+    outMSG("Fetching video...");
+
+    getPage(videoUrl).then(function(body) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(body, 'text/html');
+      const videoSource = doc.querySelector('source[type="video/mp4"]');
+
+      if (videoSource) {
+        const videoLink = videoSource.getAttribute('src');
+        outMSG("Video Found! Click to download: ");
+        output.innerHTML += `<a href="${videoLink}" download style="color: #FF4500; font-weight: bold;">Download MP4</a>`;
+      } else {
+        outMSG("Video not found or invalid URL.");
+      }
+
+    }, function(status) {
+      outMSG("Error fetching page. Status: " + status);
+    });
+  }
+
+  var getPage = function(url) {
+    return new Promise(function(resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('get', url, true);
+      xhr.responseType = 'text';
+      xhr.onload = function() {
+        var status = xhr.status;
+        if (status === 200) {
+          resolve(xhr.response);
+        } else {
+          reject(status);
+        }
+      };
+      xhr.send();
+    });
+  };
+
+  function outMSG(text) {
+    var output = document.getElementById("run");
+    var msg = document.createElement("p");
+    msg.innerHTML = text;
+    output.appendChild(msg);
+  }
+</script>
+
+</body>
+</html>
