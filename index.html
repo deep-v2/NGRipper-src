@@ -144,9 +144,9 @@
 
   <main>
     <div class="container">
-      <h2>NewGrounds Audio</h2>
+      <h2>NewGrounds Video</h2>
       <h3>Downloader</h3>
-      <input type="text" id="songid" placeholder="Enter Song ID">
+      <input type="text" id="videoid" placeholder="Enter Video ID">
       <button onclick="run()">Download</button>
       <div id="run"></div>
     </div>
@@ -159,69 +159,70 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-   function run() {
-  const id = document.getElementById("songid").value;
-  const output = document.getElementById("run");
-  output.innerHTML = "";
+    function run() {
+      const id = document.getElementById("videoid").value;
+      const output = document.getElementById("run");
+      output.innerHTML = "";
 
-  if (id === "") {
-    outMSG("No Song ID");
-    return;
-  }
-
-  outMSG("Wait...");
-
-  getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Faudio%2Flisten%2F" + id).then(function(body) {
-    const data = JSON.parse(body).contents;
-    const code = JSON.parse(body).status.http_code;
-    if (code !== 200) {
-      if (code === 404) {
-        outMSG("Not Found");
+      if (id === "") {
+        outMSG("No Video ID");
         return;
       }
-      outMSG("Something went wrong. ERROR CODE " + code); 
-      return;
+
+      outMSG("Wait...");
+
+      // Cambié la URL para que sea la de un video
+      getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Fmovies%2Fview%2F" + id).then(function(body) {
+        const data = JSON.parse(body).contents;
+        const code = JSON.parse(body).status.http_code;
+
+        if (code !== 200) {
+          if (code === 404) {
+            outMSG("Not Found");
+            return;
+          }
+          outMSG("Something went wrong. ERROR CODE " + code); 
+          return;
+        }
+
+        let url = data.substring(data.indexOf("<![CDATA[") + 9);
+        url = url.substring(url.indexOf("embedController([") + 17);
+        url = url.substring(0, url.indexOf("\",\""));
+        url = url.substring(0, url.indexOf("?"));
+        url = url.substring(url.indexOf("url") + 3);
+        url = url.substring(url.indexOf(":\"") + 2);
+        url = url.replace(/\\\//g, "/");
+
+        outMSG("Done!");
+
+        const win = window.open("", "_blank");
+
+        if (win) {
+          win.document.write(`
+            <html>
+            <body style="background: #111; color: white; font-family: sans-serif; text-align: center; padding-top: 50px;">
+              <p>Redirecting...</p>
+              <a id="dl" href="${url}?ngripper=1" download style="display:none;"></a>
+              <script>
+                const link = document.getElementById('dl');
+                link.click();
+                setTimeout(() => window.close(), 2000);
+              <\/script>
+            </body>
+            </html>
+          `);
+        } else {
+          outMSG("Redirect blocked, please allow popups on this site.");
+        }
+
+      }, function(status) {
+        if (status === 404) {
+          outMSG("Not Found");
+          return;
+        }
+        outMSG("Something went wrong. ERROR CODE " + status);
+      });
     }
-
-    let url = data.substring(data.indexOf("<![CDATA[") + 9);
-    url = url.substring(url.indexOf("embedController([") + 17);
-    url = url.substring(0, url.indexOf("\",\""));
-    url = url.substring(0, url.indexOf("?"));
-    url = url.substring(url.indexOf("url") + 3);
-    url = url.substring(url.indexOf(":\"") + 2);
-    url = url.replace(/\\\//g, "/");
-
-    outMSG("Done!");
-
-    const win = window.open("", "_blank");
-
-    if (win) {
-      win.document.write(`
-        <html>
-        <body style="background: #111; color: white; font-family: sans-serif; text-align: center; padding-top: 50px;">
-          <p>Redirecting...</p>
-          <a id="dl" href="${url}?ngripper=1" download style="display:none;"></a>
-          <script>
-            const link = document.getElementById('dl');
-            link.click();
-            setTimeout(() => window.close(), 2000);
-          <\/script>
-        </body>
-        </html>
-      `);
-    } else {
-      outMSG("Redirect blocked, please allow popups on this site.");
-    }
-
-  }, function(status) {
-    if (status === 404) {
-      outMSG("Not Found");
-      return;
-    }
-    outMSG("Something went wrong. ERROR CODE " + status);
-  });
-}
-
 
     var getPage = function(url) {
       return new Promise(function(resolve, reject) {
