@@ -144,10 +144,10 @@
 
 <main>
   <div class="container">
-    <h2>NewGrounds Video Downloader</h2>
-    <h3>Enter NewGrounds Video URL</h3>
-    <input type="text" id="videoUrl" placeholder="Enter Video URL (e.g., https://www.newgrounds.com/portal/view/*)">
-    <button onclick="fetchVideo()">Download Video</button>
+    <h2>NewGrounds Video</h2>
+    <h3>Downloader</h3>
+    <input type="text" id="videoid" placeholder="Enter Video ID">
+    <button onclick="downloadVideo()">Download</button>
     <div id="run"></div>
   </div>
 </main>
@@ -159,33 +159,45 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  function fetchVideo() {
-    const videoUrl = document.getElementById("videoUrl").value;
+  function downloadVideo() {
+    const videoId = document.getElementById("videoid").value;
     const output = document.getElementById("run");
     output.innerHTML = "";
 
-    if (videoUrl === "") {
-      outMSG("Please enter a video URL.");
+    if (videoId === "") {
+      outMSG("No Video ID");
       return;
     }
 
     outMSG("Fetching video...");
 
-    getPage(videoUrl).then(function(body) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(body, 'text/html');
-      const videoSource = doc.querySelector('source[type="video/mp4"]');
+    // Usamos el servicio de AllOrigins para obtener la página de Newgrounds
+    getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Fportal%2Fview%2F" + videoId).then(function(body) {
+      const data = JSON.parse(body).contents;
+      const code = JSON.parse(body).status.http_code;
 
-      if (videoSource) {
-        const videoLink = videoSource.getAttribute('src');
-        outMSG("Video Found! Click to download: ");
-        output.innerHTML += `<a href="${videoLink}" download style="color: #FF4500; font-weight: bold;">Download MP4</a>`;
+      if (code !== 200) {
+        if (code === 404) {
+          outMSG("Video Not Found");
+          return;
+        }
+        outMSG("Something went wrong. ERROR CODE " + code); 
+        return;
+      }
+
+      // Buscar la URL del video en el contenido
+      let videoUrl = data.match(/<source type="video\/mp4" src="(https:\/\/[^\"]+)">/);
+
+      if (videoUrl && videoUrl[1]) {
+        outMSG("Done! Video URL: " + videoUrl[1]);
+        // Aquí puedes redirigir o mostrar un enlace para descargar el video
+        output.innerHTML = `<a href="${videoUrl[1]}" target="_blank">Click to download the video</a>`;
       } else {
-        outMSG("Video not found or invalid URL.");
+        outMSG("Video URL not found.");
       }
 
     }, function(status) {
-      outMSG("Error fetching page. Status: " + status);
+      outMSG("Something went wrong. ERROR CODE " + status);
     });
   }
 
@@ -216,3 +228,4 @@
 
 </body>
 </html>
+
