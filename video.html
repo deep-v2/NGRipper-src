@@ -2,217 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="google-site-verification" content="YKdmuuwbzgjOP3iJVuUpVYccjKFx6HfwYvLv5GmRtSE" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NewGrounds Video Downloader</title>
-  <link rel="icon" type="image/png" href="logo.png">
   <style>
-    * {
+    /* Estilos sencillos para el sitio */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: url('bg.png') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Arial', sans-serif;
-      color: white;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background-color: rgba(0, 0, 0, 0.7);
-      box-shadow: 0 0 10px #000;
-    }
-
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-
-    .title {
-      font-size: 1.5rem;
-      color: #FF4500;
-      font-weight: bold;
-    }
-
-    .support-btn {
-      background-color: #FF4500;
-      border: none;
-      color: #111;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .support-btn:hover {
-      background-color: #ff652f;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      height: 100vh;
     }
 
     .container {
       background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 15px;
       padding: 30px;
+      border-radius: 10px;
       text-align: center;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 0 10px #000;
-    }
-
-    .container h2 {
-      font-size: 1.8rem;
-      color: #FF4500;
-      margin-bottom: 5px;
-    }
-
-    .container h3 {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      color: #ccc;
     }
 
     input, button {
+      margin: 10px;
       padding: 10px;
       font-size: 1rem;
-      margin: 10px 5px;
-      border-radius: 8px;
-      border: 2px solid #FF4500;
-      background-color: #222;
-      color: #FF4500;
-      transition: 0.3s ease;
+      background-color: #FF4500;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
     input:focus, button:hover {
-      background-color: #FF4500;
-      color: #111;
-      transform: scale(1.05);
+      background-color: #FF652F;
     }
 
-    #run {
+    #video-link {
       margin-top: 20px;
-      font-size: 1rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-      background-color: rgba(0, 0, 0, 0.6);
-      box-shadow: 0 -2px 10px #000;
+      color: #FF4500;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-container">
-    <img src="logo.png" alt="Logo" class="logo">
-    <div class="title">NGRipper</div>
-  </div>
-  <div style="display: flex; gap: 10px;">
-    <button class="support-btn" onclick="location.href='index.html'">Audio</button>
-    <button class="support-btn" onclick="location.href='video.html'">Video</button>
-    <button class="support-btn" onclick="location.href='swf.html'">SWF</button>
-    <button class="support-btn" onclick="location.href='support.html'">Support Me</button>
-  </div>
-</header>
-
-<main>
   <div class="container">
-    <h2>NewGrounds Video</h2>
-    <h3>Downloader</h3>
+    <h2>NewGrounds Video Downloader</h2>
+    <p>Enter the Video ID to get the video download link:</p>
     <input type="text" id="videoid" placeholder="Enter Video ID">
-    <button onclick="downloadVideo()">Download</button>
-    <div id="run"></div>
+    <button onclick="fetchVideo()">Fetch Video</button>
+    <div id="video-link"></div>
   </div>
-</main>
 
-<footer>
-  &copy; NGRipper <span id="year"></span>
-</footer>
+  <script>
+    function fetchVideo() {
+      const videoId = document.getElementById("videoid").value;
+      const output = document.getElementById("video-link");
+      output.innerHTML = "Fetching video...";
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  function downloadVideo() {
-    const videoId = document.getElementById("videoid").value;
-    const output = document.getElementById("run");
-    output.innerHTML = "";
-
-    if (videoId === "") {
-      outMSG("No Video ID");
-      return;
-    }
-
-    outMSG("Fetching video...");
-
-    // Obtener la página de video desde Newgrounds
-    getPage("https://www.newgrounds.com/portal/view/" + videoId).then(function(body) {
-      // Buscar la URL del video MP4
-      let videoUrl = body.match(/<video[^>]*><source[^>]*type="video\/mp4"[^>]*src="(https:\/\/uploads\.ungrounded\.net\/[^"]+)"/);
-
-      if (videoUrl && videoUrl[1]) {
-        outMSG("Done! Redirecting to video...");
-        // Redirigir al usuario al enlace del video
-        window.location.href = videoUrl[1];
-      } else {
-        outMSG("Video Not Found");
+      if (!videoId) {
+        output.innerHTML = "Please enter a valid Video ID.";
+        return;
       }
 
-    }, function(status) {
-      outMSG("Something went wrong. ERROR CODE " + status);
-    });
-  }
-
-  var getPage = function(url) {
-    return new Promise(function(resolve, reject) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('get', url, true);
-      xhr.responseType = 'text';
-      xhr.onload = function() {
-        var status = xhr.status;
-        if (status === 200) {
-          resolve(xhr.response);
-        } else {
-          reject(status);
-        }
-      };
-      xhr.send();
-    });
-  };
-
-  function outMSG(text) {
-    var output = document.getElementById("run");
-    var msg = document.createElement("p");
-    msg.innerHTML = text;
-    output.appendChild(msg);
-  }
-</script>
+      const url = `https://www.newgrounds.com/portal/view/${videoId}`;
+      
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          const videoElement = new DOMParser().parseFromString(html, "text/html").querySelector("video source");
+          
+          if (videoElement) {
+            const videoUrl = videoElement.getAttribute("src");
+            output.innerHTML = `Download Link: <a href="${videoUrl}" target="_blank">${videoUrl}</a>`;
+          } else {
+            output.innerHTML = "Video Not Found.";
+          }
+        })
+        .catch(error => {
+          output.innerHTML = "Something went wrong. Please try again.";
+        });
+    }
+  </script>
 
 </body>
 </html>
