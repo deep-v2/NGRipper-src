@@ -1,110 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="google-site-verification" content="YKdmuuwbzgjOP3iJVuUpVYccjKFx6HfwYvLv5GmRtSE" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NewGrounds Ripper</title>
-  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="icon" href="logo.png" />
   <style>
-    * {
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: url('bg.png') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Arial', sans-serif;
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 30px;
-      background-color: rgba(0, 0, 0, 0.7);
-      box-shadow: 0 0 10px #000;
+      padding: 10px 30px;
+      background-color: #1a1a1a;
+      border-bottom: 2px solid #FF4500;
     }
 
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 10px;
     }
 
     .logo {
       width: 40px;
       height: 40px;
       border-radius: 10px;
-      object-fit: cover;
+      margin-right: 10px;
     }
 
     .title {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       color: #FF4500;
-      font-weight: bold;
     }
 
-    .support-btn {
+    .support-button {
+      font-size: 1rem;
+      padding: 8px 16px;
       background-color: #FF4500;
       border: none;
-      color: #111;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 6px;
+      color: black;
+      text-decoration: none;
       transition: background-color 0.3s ease;
     }
 
-    .support-btn:hover {
-      background-color: #ff652f;
+    .support-button:hover {
+      background-color: #ff7433;
     }
 
     main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
+      margin-top: 50px;
     }
 
-    .container {
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 0 10px #000;
-    }
-
-    .container h2 {
-      font-size: 1.8rem;
-      color: #FF4500;
-      margin-bottom: 5px;
-    }
-
-    .container h3 {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      color: #ccc;
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
     }
 
     input, button {
+      font-size: 1.2rem;
       padding: 10px;
-      font-size: 1rem;
-      margin: 10px 5px;
+      margin: 10px;
       border-radius: 8px;
       border: 2px solid #FF4500;
       background-color: #222;
       color: #FF4500;
-      transition: 0.3s ease;
+      transition: transform 0.2s ease-in-out, background-color 0.3s ease;
     }
 
     input:focus, button:hover {
@@ -114,42 +83,36 @@
     }
 
     #run {
-      margin-top: 20px;
-      font-size: 1rem;
+      margin-top: 30px;
+    }
+
+    p {
+      color: #ccc;
+      margin: 5px;
     }
 
     footer {
-      text-align: center;
+      margin-top: 80px;
       padding: 20px;
       font-size: 0.9rem;
-      background-color: rgba(0, 0, 0, 0.6);
-      box-shadow: 0 -2px 10px #000;
+      color: #666;
     }
   </style>
 </head>
 <body>
-
-<header>
-  <div class="logo-container">
-    <img src="logo.png" alt="Logo" class="logo">
-    <div class="title">NGRipper</div>
-  </div>
-  <div style="display: flex; gap: 10px;">
-    <button class="support-btn" onclick="location.href='index.html'">Audio</button>
-    <button class="support-btn" onclick="location.href='video.html'">Video</button>
-    <button class="support-btn" onclick="location.href='swf.html'">SWF</button>
-    <button class="support-btn" onclick="location.href='support.html'">Support Me</button>
-  </div>
-</header>
+  <header>
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo" class="logo"/>
+      <span class="title">NGRIPPER</span>
+    </div>
+    <a href="support.html" class="support-button">Support Me</a>
+  </header>
 
   <main>
-    <div class="container">
-      <h2>NewGrounds Video</h2>
-      <h3>Downloader</h3>
-      <input type="text" id="videoid" placeholder="Enter Video ID">
-      <button onclick="run()">Download</button>
-      <div id="run"></div>
-    </div>
+    <h1>NewGrounds Audio Downloader</h1>
+    <input type="text" id="songid" placeholder="Enter Song ID"/>
+    <button onclick="run()">Download</button>
+    <div id="run"></div>
   </main>
 
   <footer>
@@ -160,77 +123,52 @@
     document.getElementById("year").textContent = new Date().getFullYear();
 
     function run() {
-      const id = document.getElementById("videoid").value;
+      const id = document.getElementById("songid").value;
       const output = document.getElementById("run");
       output.innerHTML = "";
 
       if (id === "") {
-        outMSG("No Video ID");
+        output.innerHTML = "<p>No Song ID</p>";
         return;
       }
 
-      outMSG("Wait...");
+      output.innerHTML = "<p>Wait...</p>";
 
-      // Cambié la URL para que sea la de un video
-      getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Fmovies%2Fview%2F" + id).then(function(body) {
-        const data = JSON.parse(body).contents;
-        const code = JSON.parse(body).status.http_code;
+      getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Faudio%2Flisten%2F" + id)
+        .then(function(body) {
+          const data = JSON.parse(body).contents;
+          const code = JSON.parse(body).status.http_code;
 
-        if (code !== 200) {
-          if (code === 404) {
-            outMSG("Not Found");
+          if (code !== 200) {
+            output.innerHTML = "<p>Something went wrong. ERROR CODE " + code + "</p>";
             return;
           }
-          outMSG("Something went wrong. ERROR CODE " + code); 
-          return;
-        }
 
-        let url = data.substring(data.indexOf("<![CDATA[") + 9);
-        url = url.substring(url.indexOf("embedController([") + 17);
-        url = url.substring(0, url.indexOf("\",\""));
-        url = url.substring(0, url.indexOf("?"));
-        url = url.substring(url.indexOf("url") + 3);
-        url = url.substring(url.indexOf(":\"") + 2);
-        url = url.replace(/\\\//g, "/");
+          let url = data.substring(data.indexOf("<![CDATA[") + 9);
+          url = url.substring(url.indexOf("embedController([") + 17);
+          url = url.substring(0, url.indexOf("\",\""));
+          url = url.substring(0, url.indexOf("?"));
+          url = url.substring(url.indexOf("url") + 3);
+          url = url.substring(url.indexOf(":\"") + 2);
+          url = url.replace(/\\\//g, "/");
 
-        outMSG("Done!");
+          url += "?ngripper=true";
 
-        const win = window.open("", "_blank");
-
-        if (win) {
-          win.document.write(`
-            <html>
-            <body style="background: #111; color: white; font-family: sans-serif; text-align: center; padding-top: 50px;">
-              <p>Redirecting...</p>
-              <a id="dl" href="${url}?ngripper=1" download style="display:none;"></a>
-              <script>
-                const link = document.getElementById('dl');
-                link.click();
-                setTimeout(() => window.close(), 2000);
-              <\/script>
-            </body>
-            </html>
-          `);
-        } else {
-          outMSG("Redirect blocked, please allow popups on this site.");
-        }
-
-      }, function(status) {
-        if (status === 404) {
-          outMSG("Not Found");
-          return;
-        }
-        outMSG("Something went wrong. ERROR CODE " + status);
-      });
+          output.innerHTML = "<p>Done!</p>";
+          window.open(url, "_blank");
+        })
+        .catch(function(status) {
+          output.innerHTML = "<p>Something went wrong. ERROR CODE " + status + "</p>";
+        });
     }
 
-    var getPage = function(url) {
+    function getPage(url) {
       return new Promise(function(resolve, reject) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('get', url, true);
-        xhr.responseType = 'text';
+        const xhr = new XMLHttpRequest();
+        xhr.open("get", url, true);
+        xhr.responseType = "text";
         xhr.onload = function() {
-          var status = xhr.status;
+          const status = xhr.status;
           if (status === 200) {
             resolve(xhr.response);
           } else {
@@ -239,15 +177,8 @@
         };
         xhr.send();
       });
-    };
-
-    function outMSG(text) {
-      var output = document.getElementById("run");
-      var msg = document.createElement("p");
-      msg.innerHTML = text;
-      output.appendChild(msg);
     }
   </script>
-
 </body>
 </html>
+
