@@ -2,114 +2,149 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NG Ripper</title>
-  <link rel="icon" type="image/png" href="logo.png">
+  <title>NewGrounds Ripper HTML</title>
+  <link rel="icon" href="logo.png">
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       background: url('bg.png') no-repeat center center fixed;
       background-size: cover;
       color: white;
       text-align: center;
     }
-    header {
+
+    .navbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background-color: rgba(0, 0, 0, 0.8);
-      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 30px;
     }
-    header img {
-      width: 50px;
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
       height: 50px;
-      border-radius: 12px;
+      width: 50px;
+      border-radius: 10px;
       margin-right: 10px;
     }
-    nav button {
-      background-color: orange;
-      border: none;
-      padding: 10px 20px;
-      margin: 0 5px;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
     }
+
+    .nav-buttons a {
+      background: orange;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      color: black;
+    }
+
     .container {
-      margin-top: 100px;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: inline-block;
+      background: rgba(0, 0, 0, 0.8);
+      width: 350px;
+      margin: 100px auto 0;
       padding: 20px;
-      border-radius: 15px;
+      border-radius: 10px;
     }
-    input {
+
+    input[type="text"] {
       padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
+      width: 60%;
+      margin: 10px 0;
+      border-radius: 5px;
       border: none;
     }
-    button.download {
-      margin-left: 10px;
+
+    button {
       padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      background-color: orange;
+      background: orange;
+      color: black;
       font-weight: bold;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
-    #log {
-      margin-top: 10px;
-      font-weight: bold;
-    }
+
     footer {
       margin-top: 100px;
       font-weight: bold;
+      color: #ffa500;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div style="display: flex; align-items: center;">
-      <img src="logo.png" alt="logo">
-      <h2>NG Ripper</h2>
-    </div>
-    <nav>
-      <button onclick="location.href='swf.html'">SWF</button>
-      <button onclick="location.href='index.html'">Audio</button>
-      <button onclick="location.href='video.html'">Video</button>
-      <button onclick="location.href='support.html'">Support Me</button>
-    </nav>
-  </header>
 
-  <div class="container">
-    <h2>Newgrounds Audio<br><span style="color: orange;">Downloader</span></h2>
-    <input type="text" id="songId" placeholder="Enter Song ID">
-    <button class="download" onclick="downloadAudio()">Download</button>
-    <div id="log">> Wait...</div>
+  <div class="navbar">
+    <div class="logo-container">
+      <img src="logo.png" class="logo" alt="Logo">
+      <span style="font-size: 24px; font-weight: bold;">NG Ripper</span>
+    </div>
+    <div class="nav-buttons">
+      <a href="swf.html">SWF</a>
+      <a href="index.html">Audio</a>
+      <a href="video.html">Video</a>
+      <a href="support.html">Support Me</a>
+    </div>
   </div>
 
-  <footer>(C) NGRipper <span id="year"></span></footer>
+  <div class="container">
+    <h2>NewGrounds Audio <span style="color: orange;">Downloader</span></h2>
+    <input type="text" id="songId" placeholder="Enter Song ID">
+    <br>
+    <button onclick="downloadAudio()">Download</button>
+    <br><br>
+    <div id="log"><strong>Logs:</strong></div>
+  </div>
+
+  <footer>
+    (C) NGRipper <span id="year"></span>
+  </footer>
 
   <script>
-    document.getElementById("year").innerText = new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
 
     function downloadAudio() {
-      const songId = document.getElementById("songId").value.trim();
-      if (!songId) {
-        document.getElementById("log").innerText = "> Please enter a Song ID.";
+      const id = document.getElementById("songId").value.trim();
+      const log = document.getElementById("log");
+      if (!id) {
+        alert("Please enter a song ID");
         return;
       }
-      const directUrl = `https://audio.ngfiles.com/${songId}/?ngripper=true`;
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
-      document.getElementById("log").innerText = "> Preparing download...";
-      const a = document.createElement('a');
-      a.href = proxyUrl;
-      a.download = `ng-audio-${songId}.mp3`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      document.getElementById("log").innerText = "> Done!";
+
+      log.innerHTML = "<strong>Logs:</strong><br>&gt; Wait...";
+
+      const url = `https://audio.ngfiles.com/${id.slice(0, -3)}000/${id}_title.mp3?ngripper=true`;
+      const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+
+      fetch(proxyUrl)
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to fetch audio");
+          return response.blob();
+        })
+        .then(blob => {
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = blobUrl;
+          a.download = `ng_audio_${id}.mp3`;
+          a.click();
+          URL.revokeObjectURL(blobUrl);
+          log.innerHTML += "<br>&gt; Download started.";
+        })
+        .catch(err => {
+          console.error(err);
+          log.innerHTML += `<br>&gt; Error: ${err.message}`;
+        });
     }
   </script>
+
 </body>
 </html>
