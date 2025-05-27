@@ -48,6 +48,15 @@
       border-radius: 8px;
       border: none;
     }
+    button.download {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: orange;
+      font-weight: bold;
+      cursor: pointer;
+    }
     #log {
       margin-top: 10px;
       font-weight: bold;
@@ -75,7 +84,7 @@
   <div class="container">
     <h2>Newgrounds Audio<br><span style="color: orange;">Downloader</span></h2>
     <input type="text" id="songId" placeholder="Enter Song ID">
-    <button onclick="downloadAudio()">Download</button>
+    <button class="download" onclick="downloadAudio()">Download</button>
     <div id="log">> Wait...</div>
   </div>
 
@@ -90,13 +99,16 @@
         document.getElementById("log").innerText = "> Please enter a Song ID.";
         return;
       }
-      const url = "https://allorigins.win/get?url=" + encodeURIComponent("https://audio.ngfiles.com/" + songId + "/?ngripper=true");
-      document.getElementById("log").innerText = "> Redirecting...";
-      const win = window.open(url, "_blank");
-      setTimeout(() => {
-        win.close();
-        document.getElementById("log").innerText = "> Done!";
-      }, 3000);
+      const directUrl = `https://audio.ngfiles.com/${songId}/?ngripper=true`;
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
+      document.getElementById("log").innerText = "> Preparing download...";
+      const a = document.createElement('a');
+      a.href = proxyUrl;
+      a.download = `ng-audio-${songId}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      document.getElementById("log").innerText = "> Done!";
     }
   </script>
 </body>
