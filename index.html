@@ -2,183 +2,142 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NewGrounds Ripper</title>
-  <link rel="icon" href="logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NewGrounds Ripper HTML</title>
+  <link rel="icon" type="image/png" href="logo.png" />
   <style>
     body {
-      background-color: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background: url('bg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
     }
-
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 30px;
-      background-color: #1a1a1a;
-      border-bottom: 2px solid #FF4500;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 20px;
     }
-
-    .logo-container {
+    .logo {
       display: flex;
       align-items: center;
     }
-
-    .logo {
-      width: 40px;
-      height: 40px;
+    .logo img {
+      height: 50px;
+      width: 50px;
       border-radius: 10px;
       margin-right: 10px;
     }
-
-    .title {
-      font-size: 1.8rem;
-      color: #FF4500;
+    nav {
+      display: flex;
+      gap: 10px;
     }
-
-    .support-button {
-      font-size: 1rem;
-      padding: 8px 16px;
-      background-color: #FF4500;
-      border: none;
-      border-radius: 6px;
+    nav a {
+      background-color: orange;
       color: black;
+      padding: 10px 20px;
+      border-radius: 6px;
       text-decoration: none;
-      transition: background-color 0.3s ease;
+      font-weight: bold;
+      transition: background 0.2s;
     }
-
-    .support-button:hover {
-      background-color: #ff7433;
+    nav a:hover {
+      background-color: #ffaa00;
     }
-
-    main {
-      margin-top: 50px;
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 70vh;
     }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+    .box {
+      background-color: rgba(0, 0, 0, 0.75);
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 400px;
     }
-
-    input, button {
-      font-size: 1.2rem;
+    .box input {
+      width: 80%;
       padding: 10px;
-      margin: 10px;
-      border-radius: 8px;
-      border: 2px solid #FF4500;
-      background-color: #222;
-      color: #FF4500;
-      transition: transform 0.2s ease-in-out, background-color 0.3s ease;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      margin: 10px 0;
     }
-
-    input:focus, button:hover {
-      background-color: #FF4500;
-      color: #111;
-      transform: scale(1.05);
+    .box button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: orange;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
     }
-
-    #run {
-      margin-top: 30px;
+    .logs {
+      text-align: left;
+      margin-top: 20px;
     }
-
-    p {
-      color: #ccc;
-      margin: 5px;
-    }
-
     footer {
-      margin-top: 80px;
-      padding: 20px;
-      font-size: 0.9rem;
-      color: #666;
+      text-align: center;
+      margin: 20px 0;
+      font-weight: bold;
+      color: #ffc107;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo-container">
-      <img src="logo.png" alt="Logo" class="logo"/>
-      <span class="title">NGRIPPER</span>
+    <div class="logo">
+      <img src="logo.png" alt="logo">
+      <span style="font-size: 1.5rem; font-weight: bold; color: orange;">NG Ripper</span>
     </div>
-    <a href="support.html" class="support-button">Support Me</a>
+    <nav>
+      <a href="swf.html">SWF</a>
+      <a href="index.html">Audio</a>
+      <a href="video.html">Video</a>
+      <a href="support.html">Support Me</a>
+    </nav>
   </header>
 
-  <main>
-    <h1>NewGrounds Audio Downloader</h1>
-    <input type="text" id="songid" placeholder="Enter Song ID"/>
-    <button onclick="run()">Download</button>
-    <div id="run"></div>
-  </main>
+  <div class="container">
+    <div class="box">
+      <h2>NewGrounds Audio <span style="color: orange;">Downloader</span></h2>
+      <input id="songId" type="text" placeholder="Enter Song ID">
+      <br>
+      <button onclick="downloadSong()">Download</button>
+      <div class="logs">
+        <b>Logs:</b>
+        <p id="log">&gt; Wait...</p>
+      </div>
+    </div>
+  </div>
 
   <footer>
-    &copy; NGRipper <span id="year"></span>
+    (C) NGRipper <span id="year"></span>
   </footer>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    function run() {
-      const id = document.getElementById("songid").value;
-      const output = document.getElementById("run");
-      output.innerHTML = "";
-
-      if (id === "") {
-        output.innerHTML = "<p>No Song ID</p>";
+    function downloadSong() {
+      const id = document.getElementById("songId").value.trim();
+      const log = document.getElementById("log");
+      if (!id) {
+        log.textContent = '> Please enter a valid ID';
         return;
       }
-
-      output.innerHTML = "<p>Wait...</p>";
-
-      getPage("https://api.allorigins.win/get?url=https%3A%2F%2Fwww.newgrounds.com%2Faudio%2Flisten%2F" + id)
-        .then(function(body) {
-          const data = JSON.parse(body).contents;
-          const code = JSON.parse(body).status.http_code;
-
-          if (code !== 200) {
-            output.innerHTML = "<p>Something went wrong. ERROR CODE " + code + "</p>";
-            return;
-          }
-
-          let url = data.substring(data.indexOf("<![CDATA[") + 9);
-          url = url.substring(url.indexOf("embedController([") + 17);
-          url = url.substring(0, url.indexOf("\",\""));
-          url = url.substring(0, url.indexOf("?"));
-          url = url.substring(url.indexOf("url") + 3);
-          url = url.substring(url.indexOf(":\"") + 2);
-          url = url.replace(/\\\//g, "/");
-
-          url += "?ngripper=true";
-
-          output.innerHTML = "<p>Done!</p>";
-          window.open(url, "_blank");
-        })
-        .catch(function(status) {
-          output.innerHTML = "<p>Something went wrong. ERROR CODE " + status + "</p>";
-        });
-    }
-
-    function getPage(url) {
-      return new Promise(function(resolve, reject) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("get", url, true);
-        xhr.responseType = "text";
-        xhr.onload = function() {
-          const status = xhr.status;
-          if (status === 200) {
-            resolve(xhr.response);
-          } else {
-            reject(status);
-          }
-        };
-        xhr.send();
-      });
+      log.textContent = '> Redirecting...';
+      const url = `https://audio.ngfiles.com/${id}/?ngripper=true`;
+      const newTab = window.open(url, '_blank');
+      setTimeout(() => {
+        if (newTab) newTab.close();
+        log.textContent = '> Done!';
+      }, 3000);
     }
   </script>
 </body>
 </html>
-
