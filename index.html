@@ -1,141 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NewGrounds Ripper HTML</title>
-  <link rel="icon" type="image/png" href="logo.png" />
+  <meta charset="UTF-8">
+  <title>NG Ripper</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       background: url('bg.png') no-repeat center center fixed;
       background-size: cover;
       color: white;
+      text-align: center;
     }
     header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      background: rgba(0, 0, 0, 0.5);
+      justify-content: space-between;
+      background-color: rgba(0, 0, 0, 0.8);
       padding: 10px 20px;
     }
-    .logo {
-      display: flex;
-      align-items: center;
-    }
-    .logo img {
-      height: 50px;
+    header img {
       width: 50px;
-      border-radius: 10px;
+      height: 50px;
+      border-radius: 12px;
       margin-right: 10px;
     }
-    nav {
-      display: flex;
-      gap: 10px;
-    }
-    nav a {
+    nav button {
       background-color: orange;
-      color: black;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-    nav a:hover {
-      background-color: #ffaa00;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 70vh;
-    }
-    .box {
-      background-color: rgba(0, 0, 0, 0.75);
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
-      max-width: 400px;
-    }
-    .box input {
-      width: 80%;
-      padding: 10px;
-      border-radius: 20px;
       border: none;
-      outline: none;
-      font-size: 1rem;
-      margin: 10px 0;
-    }
-    .box button {
       padding: 10px 20px;
-      border: none;
+      margin: 0 5px;
       border-radius: 10px;
-      background-color: orange;
-      color: black;
       font-weight: bold;
       cursor: pointer;
     }
-    .logs {
-      text-align: left;
-      margin-top: 20px;
+    .container {
+      margin-top: 100px;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: inline-block;
+      padding: 20px;
+      border-radius: 15px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+    #log {
+      margin-top: 10px;
+      font-weight: bold;
     }
     footer {
-      text-align: center;
-      margin: 20px 0;
+      margin-top: 100px;
       font-weight: bold;
-      color: #ffc107;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">
+    <div style="display: flex; align-items: center;">
       <img src="logo.png" alt="logo">
-      <span style="font-size: 1.5rem; font-weight: bold; color: orange;">NG Ripper</span>
+      <h2>NG Ripper</h2>
     </div>
     <nav>
-      <a href="swf.html">SWF</a>
-      <a href="index.html">Audio</a>
-      <a href="video.html">Video</a>
-      <a href="support.html">Support Me</a>
+      <button onclick="location.href='swf.html'">SWF</button>
+      <button onclick="location.href='index.html'">Audio</button>
+      <button onclick="location.href='video.html'">Video</button>
+      <button onclick="location.href='support.html'">Support Me</button>
     </nav>
   </header>
 
   <div class="container">
-    <div class="box">
-      <h2>NewGrounds Audio <span style="color: orange;">Downloader</span></h2>
-      <input id="songId" type="text" placeholder="Enter Song ID">
-      <br>
-      <button onclick="downloadSong()">Download</button>
-      <div class="logs">
-        <b>Logs:</b>
-        <p id="log">&gt; Wait...</p>
-      </div>
-    </div>
+    <h2>Newgrounds Audio<br><span style="color: orange;">Downloader</span></h2>
+    <input type="text" id="songId" placeholder="Enter Song ID">
+    <button onclick="downloadAudio()">Download</button>
+    <div id="log">> Wait...</div>
   </div>
 
-  <footer>
-    (C) NGRipper <span id="year"></span>
-  </footer>
+  <footer>(C) NGRipper <span id="year"></span></footer>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").innerText = new Date().getFullYear();
 
-    function downloadSong() {
-      const id = document.getElementById("songId").value.trim();
-      const log = document.getElementById("log");
-      if (!id) {
-        log.textContent = '> Please enter a valid ID';
+    function downloadAudio() {
+      const songId = document.getElementById("songId").value.trim();
+      if (!songId) {
+        document.getElementById("log").innerText = "> Please enter a Song ID.";
         return;
       }
-      log.textContent = '> Redirecting...';
-      const url = `https://audio.ngfiles.com/${id}/?ngripper=true`;
-      const newTab = window.open(url, '_blank');
+      const url = "https://allorigins.win/get?url=" + encodeURIComponent("https://audio.ngfiles.com/" + songId + "/?ngripper=true");
+      document.getElementById("log").innerText = "> Redirecting...";
+      const win = window.open(url, "_blank");
       setTimeout(() => {
-        if (newTab) newTab.close();
-        log.textContent = '> Done!';
+        win.close();
+        document.getElementById("log").innerText = "> Done!";
       }, 3000);
     }
   </script>
